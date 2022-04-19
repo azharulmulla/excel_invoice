@@ -1,9 +1,9 @@
 from odoo import models
 
 
-class InvoiceXlsx(models.AbstractModel):
-    _name = 'report.invoice_excel.report_invoice_xls'
-    _inherit = 'report.report_xlsx.abstract'
+class InvoiceFormateXlsx(models.AbstractModel):
+    _name = 'report.invoice_excel.report_invoice_xlsx'
+    _inherit = 'report.report_type_xlsx.abstract'
 
     def generate_xlsx_report(self, workbook, data, partners):
         for obj in partners:
