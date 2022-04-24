@@ -1,0 +1,119 @@
+from pkg_resources import safe_extra
+from odoo import models
+
+
+class InvoiceFormateXlsx(models.AbstractModel):
+    _name = 'report.invoice_excel.report_invoice_xlsx'
+    _inherit = ['report.report_type_xlsx.abstract']
+
+    def generate_xlsx_report(self, workbook, data, invoice):
+        sheet = workbook.add_worksheet('Invoice')
+        bold = workbook.add_format({'bold': True})
+        header_formate = workbook.add_format({'bold': 1, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'fg_color': '#c7bfbf',})
+        header_formate.set_font_size(17)
+        sub_header_formate = workbook.add_format({'bold': 1, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'fg_color': '#c7bfbf',})
+        demo_data_formate = workbook.add_format({'border': 1, 'align': 'center', 'valign': 'vcenter',})
+        demo_data_formate2 = workbook.add_format({'border': 1, 'align': 'left', 'valign': 'vcenter',})
+        sub_header_small_formate = workbook.add_format({'bold': 1, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'fg_color': '#c7bfbf',})
+        sub_header_small_formate.set_font_size(10)
+        # header_font = workbook.add_format()
+        # header_font.set_font_size(40)
+
+        sheet.set_row(0, 45)
+        sheet.set_row(1, 8)
+        sheet.set_row(2, 20)
+        sheet.set_row(10, 4)
+        sheet.set_row(24, 3)
+        
+        for obj in invoice:
+            sheet.merge_range(0, 0, 0, 13, 'Invoice', header_formate)
+            sheet.merge_range(2, 0, 2, 5, 'Exporter', sub_header_formate)
+            sheet.merge_range(3, 0, 9, 5, 'Exporter data here', demo_data_formate)
+            sheet.merge_range(2, 7, 2, 10, 'Invoice No. & Date', sub_header_formate)
+            sheet.merge_range(3, 7, 5, 10, 'Date info here', demo_data_formate)
+            sheet.merge_range(6, 7, 6, 10, 'Buyers Order No. & Date', sub_header_formate)
+            sheet.merge_range(7, 7, 9, 10, 'Buyers Order No. & Date here', demo_data_formate)
+            sheet.merge_range(2, 11, 9, 13, '....', demo_data_formate)
+            sheet.merge_range(11, 0, 11, 5, 'Consignee', sub_header_formate)
+            sheet.merge_range(12, 0, 17, 5, 'Consignee data here', demo_data_formate)
+            sheet.merge_range(11, 7, 11, 13, 'Bill to', sub_header_formate)
+            sheet.merge_range(12, 7, 15, 13, 'Bill to data here', demo_data_formate)
+            sheet.merge_range(16, 7, 16, 10, 'Country of Origin of good',  sub_header_small_formate)
+            sheet.merge_range(16, 11, 16, 13, 'Country of Final Destination',  sub_header_small_formate)
+            sheet.merge_range(17, 7, 17, 10, 'Country here', demo_data_formate)
+            sheet.merge_range(17, 11, 17, 13, 'Country here', demo_data_formate)
+            sheet.merge_range(18, 0, 18, 2, 'Vessel/Flight No.', sub_header_small_formate)
+            sheet.merge_range(18, 3, 18, 5, 'Port of Loading', sub_header_small_formate)
+            sheet.merge_range(19, 0, 19, 2, 'data here', demo_data_formate)
+            sheet.merge_range(19, 3, 19, 5, 'port data', demo_data_formate)
+            sheet.merge_range(19, 7, 19, 9, 'Terms', sub_header_small_formate)
+            sheet.merge_range(19, 10, 19, 13, 'Data here', demo_data_formate)
+            sheet.merge_range(20, 7, 20, 9, 'PAYMENT', sub_header_small_formate)
+            sheet.merge_range(20, 10, 20, 13, 'Data here', demo_data_formate)
+            sheet.merge_range(21, 7, 21, 9, 'Net Weight', sub_header_small_formate)
+            sheet.merge_range(21, 10, 21, 13, 'Data here', demo_data_formate)
+            sheet.merge_range(22, 7, 22, 9, 'Gross Weight', sub_header_small_formate)
+            sheet.merge_range(22, 10, 22, 13, 'Data here', demo_data_formate)
+            sheet.merge_range(23, 7, 23, 9, 'IRN', sub_header_small_formate)
+            sheet.merge_range(23, 10, 23, 13, 'Data here', demo_data_formate)
+            sheet.merge_range(18, 7, 18, 13, 'Terms of Delivery and Payment', sub_header_small_formate)
+            sheet.merge_range(20, 0, 20, 2, 'Port of Discharge', sub_header_small_formate)
+            sheet.merge_range(20, 3, 20, 5, 'Final Destination', sub_header_small_formate)
+            sheet.merge_range(21, 0, 21, 2, 'data here', demo_data_formate)
+            sheet.merge_range(21, 3, 21, 5, 'data here', demo_data_formate)
+            sheet.merge_range(21, 3, 21, 5, 'data here', demo_data_formate)
+            sheet.merge_range(22, 0, 22, 2, 'Ack. No', sub_header_small_formate)
+            sheet.merge_range(22, 3, 22, 5, 'Ack. Date',sub_header_small_formate)
+            sheet.merge_range(23, 0, 23, 2, 'Data', demo_data_formate)
+            sheet.merge_range(23, 3, 23, 5, 'Data', demo_data_formate)
+
+            #code for product discription need to dynamic customize
+            sheet.merge_range(25, 0, 25, 1, 'Carton No.', sub_header_small_formate)
+            sheet.merge_range(25, 2, 25, 7, 'Description of goods', sub_header_small_formate)
+            sheet.write(25, 8, 'Quantity', sub_header_small_formate)
+            sheet.merge_range(25, 9, 25, 10, 'Rate(US)', sub_header_small_formate)
+            sheet.merge_range(25, 11, 25, 13, 'Amount(US)', sub_header_small_formate)
+
+            sheet.merge_range(26, 0, 26, 1, 'Data', demo_data_formate)
+            sheet.merge_range(26, 2, 26, 7, 'Data', demo_data_formate)
+            sheet.write(26, 8,'Data', demo_data_formate)
+            sheet.merge_range(26, 9, 26, 10, 'Data', demo_data_formate)
+            sheet.merge_range(26, 11, 26, 13, 'Data', demo_data_formate)
+
+            sheet.merge_range(27, 0, 27, 1, 'Data', demo_data_formate)
+            sheet.merge_range(27, 2, 27, 7, 'Data', demo_data_formate)
+            sheet.write(27, 8,'Data', demo_data_formate)
+            sheet.merge_range(27, 9, 27, 10, 'Data', demo_data_formate)
+            sheet.merge_range(27, 11, 27, 13, 'Data', demo_data_formate)
+
+            sheet.merge_range(28, 0, 28, 1, 'Data', demo_data_formate)
+            sheet.merge_range(28, 2, 28, 7, 'Data', demo_data_formate)
+            sheet.write(28, 8,'Data', demo_data_formate)
+            sheet.merge_range(28, 9, 28, 10, 'Data', demo_data_formate)
+            sheet.merge_range(28, 11, 28, 13, 'Data', demo_data_formate)
+
+            sheet.merge_range(29, 0, 29, 1, 'Data', demo_data_formate)
+            sheet.merge_range(29, 2, 29, 7, 'Data', demo_data_formate)
+            sheet.write(29, 8,'Data', demo_data_formate)
+            sheet.merge_range(29, 9, 29, 10, 'Data', demo_data_formate)
+            sheet.merge_range(29, 11, 29, 13, 'Data', demo_data_formate)
+
+            sheet.merge_range(30, 0, 30, 2, 'Total No. of. Cartons', sub_header_small_formate)
+            sheet.merge_range(30, 3, 30, 5, 'Data', demo_data_formate)
+            sheet.merge_range(30, 6, 30, 7, 'Total', sub_header_small_formate)
+            sheet.write(30, 8, '...', demo_data_formate)
+            sheet.merge_range(30, 9, 30, 10, '...', demo_data_formate)
+            sheet.merge_range(30, 11, 30, 13, '...', demo_data_formate)
+
+            sheet.merge_range(31, 0, 33, 9, 'Amount chargeable (In words)\n the amount ', demo_data_formate2)
+            sheet.merge_range(34, 0, 36, 9, 'Declaration\n We declare that this invoice shows the actual price of the goods described and that all particulars\n are true and correct', demo_data_formate2)
+            sheet.merge_range(31, 10, 36, 13, 'Signature & Date', demo_data_formate)
+
+
+
+
+
+             
+            
+            
+
