@@ -2,6 +2,7 @@ from pkg_resources import safe_extra
 from odoo import models
 
 
+
 class InvoiceFormateXlsx(models.AbstractModel):
     _name = 'report.invoice_excel.report_invoice_xlsx'
     _inherit = ['report.report_type_xlsx.abstract']
@@ -19,6 +20,9 @@ class InvoiceFormateXlsx(models.AbstractModel):
         # header_font = workbook.add_format()
         # header_font.set_font_size(40)
 
+        row = 3
+        col = 0
+
         sheet.set_row(0, 45)
         sheet.set_row(1, 8)
         sheet.set_row(2, 20)
@@ -28,20 +32,64 @@ class InvoiceFormateXlsx(models.AbstractModel):
         for obj in invoice:
             sheet.merge_range(0, 0, 0, 13, 'Invoice', header_formate)
             sheet.merge_range(2, 0, 2, 5, 'Exporter', sub_header_formate)
-            sheet.merge_range(3, 0, 9, 5, 'Exporter data here', demo_data_formate)
+            # sheet.merge_range(3, 0, 9, 5, 'Data here', demo_data_formate)
+            
+            # Exporter data here
+            sheet.merge_range(3, 0, 3, 5, obj.company_id.name, demo_data_formate)
+            sheet.merge_range(4, 0, 4, 5, obj.company_id.street, demo_data_formate)
+            sheet.merge_range(5, 0, 5, 5, obj.company_id.street2, demo_data_formate)
+            sheet.merge_range(6, 0, 6, 5, obj.company_id.city, demo_data_formate)
+            sheet.merge_range(7, 0, 7, 5, obj.company_id.state_id.name, demo_data_formate)
+            sheet.merge_range(8, 0, 8, 5, obj.company_id.zip, demo_data_formate)
+            sheet.merge_range(9, 0, 9, 5, obj.company_id.country_id.name, demo_data_formate)
+            # sheet.write(row, col, obj.company_id.name,)
+            # row += 1
+            # sheet.write(row, col, obj.company_id.street)
+            # row += 1
             sheet.merge_range(2, 7, 2, 10, 'Invoice No. & Date', sub_header_formate)
-            sheet.merge_range(3, 7, 5, 10, 'Date info here', demo_data_formate)
+            # sheet.merge_range(3, 7, 5, 10, 'Date info here', demo_data_formate)
+            
+            # name and date formate here
+            sheet.merge_range(3, 7, 3, 10, obj.name, demo_data_formate)
+            sheet.merge_range(4, 7, 4, 10, obj.invoice_date, demo_data_formate)
+
+
             sheet.merge_range(6, 7, 6, 10, 'Buyers Order No. & Date', sub_header_formate)
-            sheet.merge_range(7, 7, 9, 10, 'Buyers Order No. & Date here', demo_data_formate)
+            # sheet.merge_range(7, 7, 9, 10, 'Buyers Order No. & Date here', demo_data_formate)
+
+            sheet.write(7, 7, 'IEC', sub_header_small_formate)
+            sheet.write(8, 7, 'PAN', sub_header_small_formate)
+            sheet.write(9, 7, 'CIN', sub_header_small_formate)
+
+            sheet.merge_range(7, 8, 7, 10, obj.company_id.iec_no, demo_data_formate)
+            sheet.merge_range(8, 8, 8, 10, obj.company_id.pan_no, demo_data_formate)
+            sheet.merge_range(9, 8, 9, 10, obj.company_id.cin_no, demo_data_formate)
+
             sheet.merge_range(2, 11, 9, 13, '....', demo_data_formate)
             sheet.merge_range(11, 0, 11, 5, 'Consignee', sub_header_formate)
-            sheet.merge_range(12, 0, 17, 5, 'Consignee data here', demo_data_formate)
+            # sheet.merge_range(12, 0, 17, 5, 'Consignee data here', demo_data_formate)
+            
+            #Consignee data here
+            sheet.merge_range(12, 0, 12, 5, obj.partner_id.name, demo_data_formate)
+            sheet.merge_range(13, 0, 13, 5, obj.partner_id.street, demo_data_formate)
+            sheet.merge_range(14, 0, 14, 5, obj.partner_id.street2, demo_data_formate)
+            sheet.merge_range(15, 0, 15, 5, obj.partner_id.city, demo_data_formate)
+            sheet.merge_range(16, 0, 16, 5, obj.partner_id.country_id.name, demo_data_formate)
+
             sheet.merge_range(11, 7, 11, 13, 'Bill to', sub_header_formate)
-            sheet.merge_range(12, 7, 15, 13, 'Bill to data here', demo_data_formate)
+            # sheet.merge_range(12, 7, 15, 13, 'Bill to data here', demo_data_formate)
+            
+            #Bill to data here
+            sheet.merge_range(12, 7, 12, 13,  obj.partner_id.name, demo_data_formate)
+            sheet.merge_range(13, 7, 13, 13,  obj.partner_id.street, demo_data_formate)
+            sheet.merge_range(14, 7, 14, 13,  obj.partner_id.city, demo_data_formate)
+            sheet.merge_range(15, 7, 15, 13, obj.partner_id.country_id.name, demo_data_formate)
+
+
             sheet.merge_range(16, 7, 16, 10, 'Country of Origin of good',  sub_header_small_formate)
             sheet.merge_range(16, 11, 16, 13, 'Country of Final Destination',  sub_header_small_formate)
-            sheet.merge_range(17, 7, 17, 10, 'Country here', demo_data_formate)
-            sheet.merge_range(17, 11, 17, 13, 'Country here', demo_data_formate)
+            sheet.merge_range(17, 7, 17, 10, obj.company_id.country_id.name, demo_data_formate)
+            sheet.merge_range(17, 11, 17, 13, obj.partner_shipping_id.country_id.name, demo_data_formate)
             sheet.merge_range(18, 0, 18, 2, 'Vessel/Flight No.', sub_header_small_formate)
             sheet.merge_range(18, 3, 18, 5, 'Port of Loading', sub_header_small_formate)
             sheet.merge_range(19, 0, 19, 2, 'data here', demo_data_formate)
