@@ -122,11 +122,16 @@ class InvoiceFormateXlsx(models.AbstractModel):
             sheet.merge_range(25, 9, 25, 10, 'Rate(US)', sub_header_small_formate)
             sheet.merge_range(25, 11, 25, 13, 'Amount(US)', sub_header_small_formate)
 
-            sheet.merge_range(26, 0, 26, 1, 'Data', demo_data_formate)
-            sheet.merge_range(26, 2, 26, 7, 'Data', demo_data_formate)
-            sheet.write(26, 8,'Data', demo_data_formate)
-            sheet.merge_range(26, 9, 26, 10, 'Data', demo_data_formate)
-            sheet.merge_range(26, 11, 26, 13, 'Data', demo_data_formate)
+            for product in obj.invoice_line_ids.product_id:
+                sheet.merge_range(26, 2, 26, 7, product.name, demo_data_formate)
+
+            for q in  obj.invoice_line_ids:
+                sheet.write(26, 8, q.quantity, demo_data_formate)
+                sheet.merge_range(26, 9, 26, 10, q.price_unit, demo_data_formate)
+                sheet.merge_range(26, 11, 26, 13, q.price_subtotal, demo_data_formate)
+            
+
+            # sheet.merge_range(26, 0, 26, 1, 'Data', demo_data_formate)  
 
             sheet.merge_range(27, 0, 27, 1, 'Data', demo_data_formate)
             sheet.merge_range(27, 2, 27, 7, 'Data', demo_data_formate)
