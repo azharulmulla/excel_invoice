@@ -99,7 +99,7 @@ class InvoiceFormateXlsx(models.AbstractModel):
             sheet.merge_range(20, 7, 20, 9, 'PAYMENT', sub_header_small_formate)
             sheet.merge_range(20, 10, 20, 13, obj.invoice_payment_term_id.name, demo_data_formate)
             sheet.merge_range(21, 7, 21, 9, 'Net Weight', sub_header_small_formate)
-            sheet.merge_range(21, 10, 21, 13, 'Data here', demo_data_formate)
+            sheet.merge_range(21, 10, 21, 13, 'data', demo_data_formate)
             sheet.merge_range(22, 7, 22, 9, 'Gross Weight', sub_header_small_formate)
             sheet.merge_range(22, 10, 22, 13, 'Data here', demo_data_formate)
             sheet.merge_range(23, 7, 23, 9, 'IRN', sub_header_small_formate)
@@ -122,34 +122,53 @@ class InvoiceFormateXlsx(models.AbstractModel):
             sheet.merge_range(25, 9, 25, 10, 'Rate(US)', sub_header_small_formate)
             sheet.merge_range(25, 11, 25, 13, 'Amount(US)', sub_header_small_formate)
 
-            for product in obj.invoice_line_ids.product_id:
-                sheet.merge_range(26, 2, 26, 7, product.name, demo_data_formate)
+            product_row = 26
 
-            for q in  obj.invoice_line_ids:
-                sheet.write(26, 8, q.quantity, demo_data_formate)
-                sheet.merge_range(26, 9, 26, 10, q.price_unit, demo_data_formate)
-                sheet.merge_range(26, 11, 26, 13, q.price_subtotal, demo_data_formate)
+
+            for product in obj.invoice_line_ids.product_id:
+                sheet.merge_range(product_row, 0, product_row, 1, 'Data', demo_data_formate)  
+                sheet.merge_range(product_row, 2, product_row, 7, product.name, demo_data_formate)
+                for q in  obj.invoice_line_ids:
+                    if(product.id == q.product_id.id):
+                        sheet.write(product_row, 8, q.quantity, demo_data_formate)
+                        sheet.merge_range(product_row, 9, product_row, 10, q.price_unit, demo_data_formate)
+                        sheet.merge_range(product_row, 11, product_row, 13, q.price_subtotal, demo_data_formate)
+                    
+                # for q in  obj.invoice_line_ids:
+                #     print("Product 2: ",q)                 
+                #     sheet.write(product_row, 8, q.quantity, demo_data_formate)
+                #     sheet.merge_range(product_row, 9, product_row, 10, q.price_unit, demo_data_formate)
+                #     sheet.merge_range(product_row, 11, product_row, 13, q.price_subtotal, demo_data_formate)
+                                
+                product_row += 1
+    
+                # product_row = 26
+
+            # for q in  obj.invoice_line_ids:
+            #     sheet.write(product_row, 8, q.quantity, demo_data_formate)
+            #     sheet.merge_range(product_row, 9, product_row, 10, q.price_unit, demo_data_formate)
+            #     sheet.merge_range(product_row, 11, product_row, 13, q.price_subtotal, demo_data_formate)
             
 
-            # sheet.merge_range(26, 0, 26, 1, 'Data', demo_data_formate)  
+            
 
-            sheet.merge_range(27, 0, 27, 1, 'Data', demo_data_formate)
-            sheet.merge_range(27, 2, 27, 7, 'Data', demo_data_formate)
-            sheet.write(27, 8,'Data', demo_data_formate)
-            sheet.merge_range(27, 9, 27, 10, 'Data', demo_data_formate)
-            sheet.merge_range(27, 11, 27, 13, 'Data', demo_data_formate)
+            # sheet.merge_range(27, 0, 27, 1, 'Data', demo_data_formate)
+            # sheet.merge_range(27, 2, 27, 7, 'Data', demo_data_formate)
+            # sheet.write(27, 8,'Data', demo_data_formate)
+            # sheet.merge_range(27, 9, 27, 10, 'Data', demo_data_formate)
+            # sheet.merge_range(27, 11, 27, 13, 'Data', demo_data_formate)
 
-            sheet.merge_range(28, 0, 28, 1, 'Data', demo_data_formate)
-            sheet.merge_range(28, 2, 28, 7, 'Data', demo_data_formate)
-            sheet.write(28, 8,'Data', demo_data_formate)
-            sheet.merge_range(28, 9, 28, 10, 'Data', demo_data_formate)
-            sheet.merge_range(28, 11, 28, 13, 'Data', demo_data_formate)
+            # sheet.merge_range(28, 0, 28, 1, 'Data', demo_data_formate)
+            # sheet.merge_range(28, 2, 28, 7, 'Data', demo_data_formate)
+            # sheet.write(28, 8,'Data', demo_data_formate)
+            # sheet.merge_range(28, 9, 28, 10, 'Data', demo_data_formate)
+            # sheet.merge_range(28, 11, 28, 13, 'Data', demo_data_formate)
 
-            sheet.merge_range(29, 0, 29, 1, 'Data', demo_data_formate)
-            sheet.merge_range(29, 2, 29, 7, 'Data', demo_data_formate)
-            sheet.write(29, 8,'Data', demo_data_formate)
-            sheet.merge_range(29, 9, 29, 10, 'Data', demo_data_formate)
-            sheet.merge_range(29, 11, 29, 13, 'Data', demo_data_formate)
+            # sheet.merge_range(29, 0, 29, 1, 'Data', demo_data_formate)
+            # sheet.merge_range(29, 2, 29, 7, 'Data', demo_data_formate)
+            # sheet.write(29, 8,'Data', demo_data_formate)
+            # sheet.merge_range(29, 9, 29, 10, 'Data', demo_data_formate)
+            # sheet.merge_range(29, 11, 29, 13, 'Data', demo_data_formate)
 
             sheet.merge_range(30, 0, 30, 2, 'Total No. of. Cartons', sub_header_small_formate)
             sheet.merge_range(30, 3, 30, 5, 'Data', demo_data_formate)
