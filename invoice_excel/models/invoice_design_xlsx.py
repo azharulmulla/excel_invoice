@@ -17,8 +17,7 @@ class InvoiceFormateXlsx(models.AbstractModel):
         demo_data_formate2 = workbook.add_format({'border': 1, 'align': 'left', 'valign': 'vcenter',})
         sub_header_small_formate = workbook.add_format({'bold': 1, 'border': 1, 'align': 'center', 'valign': 'vcenter', 'fg_color': '#c7bfbf',})
         sub_header_small_formate.set_font_size(10)
-        # header_font = workbook.add_format()
-        # header_font.set_font_size(40)
+        
 
         row = 3
         col = 0
@@ -109,6 +108,7 @@ class InvoiceFormateXlsx(models.AbstractModel):
             sheet.merge_range(20, 3, 20, 5, 'Final Destination', sub_header_small_formate)
             sheet.merge_range(21, 0, 21, 2, obj.shipping_port_discharge, demo_data_formate)
             sheet.merge_range(21, 3, 21, 5, obj.partner_shipping_id.country_id.name, demo_data_formate)
+
             # sheet.merge_range(21, 3, 21, 5, 'data here', demo_data_formate)
             sheet.merge_range(22, 0, 22, 2, 'Ack. No', sub_header_small_formate)
             sheet.merge_range(22, 3, 22, 5, 'Ack. Date',sub_header_small_formate)
@@ -122,8 +122,14 @@ class InvoiceFormateXlsx(models.AbstractModel):
             sheet.merge_range(25, 9, 25, 10, 'Rate(US)', sub_header_small_formate)
             sheet.merge_range(25, 11, 25, 13, 'Amount(US)', sub_header_small_formate)
 
+
+
             product_row = 26
 
+            total_quantity = []
+            total_rate = []
+            total_amount = []
+            
 
             for product in obj.invoice_line_ids.product_id:
                 sheet.merge_range(product_row, 0, product_row, 1, 'Data', demo_data_formate)  
@@ -131,61 +137,37 @@ class InvoiceFormateXlsx(models.AbstractModel):
                 for q in  obj.invoice_line_ids:
                     if(product.id == q.product_id.id):
                         sheet.write(product_row, 8, q.quantity, demo_data_formate)
+                        total_quantity.append(q.quantity)
                         sheet.merge_range(product_row, 9, product_row, 10, q.price_unit, demo_data_formate)
                         sheet.merge_range(product_row, 11, product_row, 13, q.price_subtotal, demo_data_formate)
-                    
-                # for q in  obj.invoice_line_ids:
-                #     print("Product 2: ",q)                 
-                #     sheet.write(product_row, 8, q.quantity, demo_data_formate)
-                #     sheet.merge_range(product_row, 9, product_row, 10, q.price_unit, demo_data_formate)
-                #     sheet.merge_range(product_row, 11, product_row, 13, q.price_subtotal, demo_data_formate)
                                 
                 product_row += 1
-    
-                # product_row = 26
+            sumOfQuantity = 0
+            for quantity in total_quantity:
+                sumOfQuantity += quantity
 
-            # for q in  obj.invoice_line_ids:
-            #     sheet.write(product_row, 8, q.quantity, demo_data_formate)
-            #     sheet.merge_range(product_row, 9, product_row, 10, q.price_unit, demo_data_formate)
-            #     sheet.merge_range(product_row, 11, product_row, 13, q.price_subtotal, demo_data_formate)
-            
 
-            
+            sumofRate = 0
+            for rate in total_rate:
+                sumofRate += rate
 
-            # sheet.merge_range(27, 0, 27, 1, 'Data', demo_data_formate)
-            # sheet.merge_range(27, 2, 27, 7, 'Data', demo_data_formate)
-            # sheet.write(27, 8,'Data', demo_data_formate)
-            # sheet.merge_range(27, 9, 27, 10, 'Data', demo_data_formate)
-            # sheet.merge_range(27, 11, 27, 13, 'Data', demo_data_formate)
-
-            # sheet.merge_range(28, 0, 28, 1, 'Data', demo_data_formate)
-            # sheet.merge_range(28, 2, 28, 7, 'Data', demo_data_formate)
-            # sheet.write(28, 8,'Data', demo_data_formate)
-            # sheet.merge_range(28, 9, 28, 10, 'Data', demo_data_formate)
-            # sheet.merge_range(28, 11, 28, 13, 'Data', demo_data_formate)
-
-            # sheet.merge_range(29, 0, 29, 1, 'Data', demo_data_formate)
-            # sheet.merge_range(29, 2, 29, 7, 'Data', demo_data_formate)
-            # sheet.write(29, 8,'Data', demo_data_formate)
-            # sheet.merge_range(29, 9, 29, 10, 'Data', demo_data_formate)
-            # sheet.merge_range(29, 11, 29, 13, 'Data', demo_data_formate)
-
-            sheet.merge_range(30, 0, 30, 2, 'Total No. of. Cartons', sub_header_small_formate)
-            sheet.merge_range(30, 3, 30, 5, 'Data', demo_data_formate)
-            sheet.merge_range(30, 6, 30, 7, 'Total', sub_header_small_formate)
-            sheet.write(30, 8, '...', demo_data_formate)
-            sheet.merge_range(30, 9, 30, 10, '...', demo_data_formate)
-            sheet.merge_range(30, 11, 30, 13, '...', demo_data_formate)
-
-            sheet.merge_range(31, 0, 33, 9, 'Amount chargeable (In words)\n the amount ', demo_data_formate2)
-            sheet.merge_range(34, 0, 36, 9, 'Declaration\n We declare that this invoice shows the actual price of the goods described and that all particulars\n are true and correct', demo_data_formate2)
-            sheet.merge_range(31, 10, 36, 13, 'Signature & Date', demo_data_formate)
+            sumofAmount = 0
+            for amount in total_amount:
+                sumofAmount += amount    
 
 
 
 
+            sheet.merge_range(product_row, 0, product_row, 2, 'Total No. of. Cartons', sub_header_small_formate)
+            sheet.merge_range(product_row, 3, product_row, 5, 'Data', demo_data_formate)
+            sheet.merge_range(product_row, 6, product_row, 7, 'Total', sub_header_small_formate)
+            sheet.write(product_row, 8, sumOfQuantity, demo_data_formate)
+            sheet.merge_range(product_row, 9, product_row, 10, sumofRate, demo_data_formate)
+            sheet.merge_range(product_row, 11, product_row, 13, sumofAmount, demo_data_formate)
 
-             
-            
-            
+            sheet.merge_range(product_row+1, 0, product_row+2, 9, 'Amount chargeable (In words)\n the amount ', demo_data_formate2)
+            sheet.merge_range(product_row+3, 0, product_row+5, 9, 'Declaration\n We declare that this invoice shows the actual price of the goods described and that all particulars\n are true and correct', demo_data_formate2)
+            sheet.merge_range(product_row+1, 10, product_row+5, 13, 'Signature & Date', demo_data_formate)
+
+
 
