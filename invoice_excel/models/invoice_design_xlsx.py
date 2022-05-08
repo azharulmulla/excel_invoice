@@ -7,6 +7,7 @@ class InvoiceFormateXlsx(models.AbstractModel):
     _name = 'report.invoice_excel.report_invoice_xlsx'
     _inherit = ['report.report_type_xlsx.abstract']
 
+# design section 
     def generate_xlsx_report(self, workbook, data, invoice):
         sheet = workbook.add_worksheet('Invoice')
         bold = workbook.add_format({'bold': True})
@@ -123,6 +124,7 @@ class InvoiceFormateXlsx(models.AbstractModel):
             sheet.merge_range(25, 11, 25, 13, 'Amount(US)', sub_header_small_formate)
 
 
+# Dynamic functionality
 
             product_row = 26
 
@@ -157,6 +159,7 @@ class InvoiceFormateXlsx(models.AbstractModel):
 
 
 
+# calculation section
 
             sheet.merge_range(product_row, 0, product_row, 2, 'Total No. of. Cartons', sub_header_small_formate)
             sheet.merge_range(product_row, 3, product_row, 5, 'Data', demo_data_formate)
@@ -165,6 +168,7 @@ class InvoiceFormateXlsx(models.AbstractModel):
             sheet.merge_range(product_row, 9, product_row, 10, sumofRate, demo_data_formate)
             sheet.merge_range(product_row, 11, product_row, 13, sumofAmount, demo_data_formate)
 
+# footer section
             sheet.merge_range(product_row+1, 0, product_row+2, 9, 'Amount chargeable (In words)\n the amount ', demo_data_formate2)
             sheet.merge_range(product_row+3, 0, product_row+5, 9, 'Declaration\n We declare that this invoice shows the actual price of the goods described and that all particulars\n are true and correct', demo_data_formate2)
             sheet.merge_range(product_row+1, 10, product_row+5, 13, 'Signature & Date', demo_data_formate)
