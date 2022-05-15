@@ -8,6 +8,5 @@
     'depends': ['account','documents_sales','account_import_export','report_type_xlsx',],
     'data': [
         'views/report_account_invoice_excel.xml',
-        # 'views/report_template_invoice_excel.xml',
     ],
 }
